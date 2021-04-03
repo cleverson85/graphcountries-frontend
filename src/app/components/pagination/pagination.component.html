@@ -1,0 +1,22 @@
+<!-- <nav>
+  <ul class="pagination justify-content-end">
+    <li [ngClass]="disabled ? 'page-item disabled': 'page-item'">
+      <a class="page-link" [routerLink]="" tabindex="-1" (click)="handlePage(0)">Previos</a>
+    </li>
+    <li class="page-item disabled"><a class="page-link" [routerLink]="" (click)="handlePage(0)">1</a></li>
+    <li class="page-item"><a class="page-link" [routerLink]="" routerLinkActive="active" (click)="handlePage(1)">2</a></li>
+    <li class="page-item"><a class="page-link" [routerLink]="" routerLinkActive="active" (click)="handlePage(2)">3</a></li>
+    <li class="page-item">
+      <a class="page-link" [routerLink]="" (click)="handlePageNext()">Next</a>
+    </li>
+  </ul>
+</nav> -->
+
+
+<div class="list">
+  <ul>
+    <li *ngFor="let item of numberPages | paginate: { itemsPerPage: 10, currentPage: p }">{{ item }}</li>
+  </ul>
+
+  <pagination-controls (pageChange)="p = $event"></pagination-controls>
+</div>

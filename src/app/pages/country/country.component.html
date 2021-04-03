@@ -1,0 +1,141 @@
+<div class="container-fluid">
+  <div class="cad">
+    <h1>{{ titulo }}</h1>
+    <div>
+      <button type="button" class="btn btn-danger" routerLink="/home">
+        Cancel
+      </button>
+      <button type="sumit" class="btn btn-primary" (click)="save()">
+        Save
+      </button>
+    </div>
+  </div>
+  <form [formGroup]="formGroup" class="needs-validation" novalidate enctype="multipart/form-data">
+    <div class="card" style="width: 50%;">
+      <div class="card-body">
+        <div class="form-row">
+          <div class="form-group col-md-10">
+            <label for="name">Name</label>
+            <input
+              id="name"
+              class="form-control"
+              type="text"
+              readonly
+              formControlName="name">
+          </div>
+          <div class="form-group col-md-2 d-flex justify-content-center align-items-center">
+            <img [src]="country.flag.svgFile" alt="Flag" style="width: 150px;">
+          </div>
+        </div>
+
+        <div class="form-row">
+          <div class="form-group col-md-6">
+            <label for="capital">Capital</label>
+            <input
+              id="capital"
+              class="form-control"
+              type="text"
+              placeholder="Capital"
+              formControlName="capital"
+              [ngClass]="{ 'is-invalid': submitted && hasError('capital') }">
+              <div class="invalid-feedback" *ngIf="hasError('capital') && hasError('capital')['required']">
+                Please enter the Capital name.
+              </div>
+          </div>
+          <div class="form-group col-md-6">
+            <label for="area">Area (km²)</label>
+            <input
+              id="area"
+              class="form-control"
+              type="text"
+              placeholder="Area"
+              formControlName="area"
+              [ngClass]="{ 'is-invalid': submitted && hasError('area') }">
+              <div class="invalid-feedback" *ngIf="hasError('area') && hasError('area')['required']">
+                Please enter the Area.
+              </div>
+          </div>
+        </div>
+
+        <div class="form-row">
+          <div class="form-group col-md-6">
+            <label for="population">Population</label>
+            <input
+              id="population"
+              class="form-control"
+              type="text"
+              placeholder="Population"
+              formControlName="population"
+              [ngClass]="{ 'is-invalid': submitted && hasError('population') }">
+              <div class="invalid-feedback" *ngIf="hasError('population') && hasError('population')['required']">
+                Please enter the Population.
+              </div>
+          </div>
+          <div class="form-group col-md-6">
+            <label for="populationDensity">Population Density (per km²)</label>
+            <input
+              id="populationDensity"
+              class="form-control"
+              type="text"
+              placeholder="Population Density (per km²)"
+              formControlName="populationDensity"
+              [ngClass]="{ 'is-invalid': submitted && hasError('populationDensity') }">
+              <div class="invalid-feedback" *ngIf="hasError('populationDensity') && hasError('populationDensity')['required']">
+                Please enter the Population Density.
+              </div>
+          </div>
+        </div>
+
+        <div class="form-row">
+          <div class="form-group col-md-6">
+            <label for="languages">Oficio Languages</label>
+            <input
+              id="languages"
+              class="form-control"
+              type="text"
+              placeholder="Oficio Languages"
+              formControlName="languages"
+              [ngClass]="{ 'is-invalid': submitted && hasError('languages') }">
+              <div class="invalid-feedback" *ngIf="hasError('languages') && hasError('languages')['required']">
+                Please enter the Oficio Languages.
+              </div>
+          </div>
+          <div class="form-group col-md-6">
+            <label for="domain">Top Level Domains</label>
+            <input
+              id="domain"
+              class="form-control"
+              type="text"
+              placeholder="Top Level Domains"
+              formControlName="domain"
+              [ngClass]="{ 'is-invalid': submitted && hasError('domain') }">
+              <div class="invalid-feedback" *ngIf="hasError('domain') && hasError('domain')['required']">
+                Please enter the Top Level Domains.
+              </div>
+          </div>
+        </div>
+
+        <label>Distance To Other Countries</label>
+        <ng-template ngFor let-otherCountry [ngForOf]="ontherCountries" let-i="index">
+          <div class="form-row">
+            <div class="form-group col-md-6">
+              <input
+                class="form-control"
+                type="text"
+                readonly
+                [value]="otherCountry?.countryName">
+            </div>
+            <div class="form-group col-md-6">
+              <input
+                class="form-control"
+                type="text"
+                readonly
+                [value]="otherCountry?.distanceInKm + ' km'">
+            </div>
+          </div>
+        </ng-template>
+
+      </div>
+    </div>
+  </form>
+</div>

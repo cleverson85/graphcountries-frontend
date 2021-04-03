@@ -1,0 +1,24 @@
+<div class="card-country">
+    <div class="card-country-imagem">
+        <img [src]="country?.flag?.svgFile" loading="lazy" sizes="(max-width: 479px) 100vw, 358px" alt="" class="image-3">
+    </div>
+    <div class="card-country-titulo">
+        <h4 class="heading-5">{{ country?.name }}</h4>
+    </div>
+    <div class="card-country-texto">
+      <p class="paragraph-5">Capital: {{ country?.capital }}</p>
+    </div>
+    <div class="card-country-texto">
+      <p class="paragraph-5">Area: {{ country?.area?.toLocaleString() }}</p>
+    </div>
+    <div class="card-country-texto">
+        <p class="paragraph-5">Population: {{ country?.population?.toLocaleString() }}</p>
+    </div>
+    <div class="card-country-ver">
+        <a class="link-block-13 w-inline-block" (click)="Edit()">
+            <div class="div-block-4">
+                <img src="assets/images/5dd7376cb9c85c55a97afad5_arrow-r1.svg" loading="lazy" width="22" alt="More details">
+            </div>
+        </a>
+    </div>
+</div>

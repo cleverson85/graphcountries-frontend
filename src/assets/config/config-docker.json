@@ -1,0 +1,13 @@
+{
+  "name": "${NAME}",
+  "production": "${PRODUCTION}",
+  "apiCountry": {
+    "url": "${API_URL}"
+  },
+  "apiCustom": {
+    "url": "${API_URL_CUSTOM}"
+  },
+  "authentication": {
+    "googleClientId": "${CLIENT_ID}"
+  }
+}

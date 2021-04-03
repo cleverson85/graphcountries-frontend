@@ -1,0 +1,20 @@
+<mat-menu #appMenu="matMenu">
+  <ng-template matMenuContent>
+    <button mat-menu-item (click)="editar()">
+      <mat-icon>edit</mat-icon>
+      <span>Editar</span>
+    </button>
+    <button mat-menu-item (click)="deletar()">
+      <mat-icon>delete</mat-icon>
+      <span>Deletar</span>
+    </button>
+    <button mat-menu-item (click)="detalhar()">
+      <mat-icon>article</mat-icon>
+      <span>Detalhes</span>
+    </button>
+  </ng-template>
+</mat-menu>
+
+<button mat-icon-button [matMenuTriggerFor]="appMenu">
+  <mat-icon>more_horiz</mat-icon>
+</button>
