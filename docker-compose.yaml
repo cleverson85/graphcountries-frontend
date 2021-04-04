@@ -1,13 +1,9 @@
-version: '3.6'
+version: "3.6"
 
 services:
   web:
     build:
       context: .
     container_name: graphcountries-frontend
-    environment:
-      API_URL: 'https://countries-274616.ew.r.appspot.com/'
-      API_URL_CUSTOM: ''
-      CLIENT_ID: '215750439007-1fg9gcs0m3kg0v4ejtis28m3p0ejl6ts.apps.googleusercontent.com'
     ports:
-      - 4200:4200
+      - 8081:80

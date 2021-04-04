@@ -15,7 +15,7 @@ import { SharedModule } from 'src/app/shared/shared.module';
     CommonModule,
     FormsModule,
     CountryRoutingModule,
-    SharedModule
+    SharedModule,
   ],
 })
 export class CountryModule { }

@@ -12,7 +12,7 @@ export class ModalService {
 
   constructor(public dialog: MatDialog) { }
 
-  showConfirm(titulo: string, mensagem: string) : Observable<any> {
+  showConfirm(titulo: string, mensagem: string): Observable<any> {
     const dialogRef = this.dialog.open(ConfirmModalComponent);
     const componentInstance = dialogRef.componentInstance;
 
@@ -22,7 +22,7 @@ export class ModalService {
     return dialogRef.afterClosed();
   }
 
-  showModal(data: any) : Observable<any> {
+  showModal(data: any): Observable<any> {
     const dialogRef = this.dialog.open(ModalComponent);
     const componentInstance = dialogRef.componentInstance;
 

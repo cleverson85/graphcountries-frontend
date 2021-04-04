@@ -1,13 +1,15 @@
-import { Injectable } from '@angular/core';
-import { Observable } from 'rxjs';
+import { Injectable, Injector } from '@angular/core';
+import { BehaviorSubject, Observable } from 'rxjs';
 import { Apollo } from 'apollo-angular';
 import { CountryQuery } from '../data/queries/country.query';
-import { map } from 'rxjs/operators';
+import { map, tap } from 'rxjs/operators';
 
 @Injectable({
   providedIn: 'root'
 })
 export class PageService {
+  pageSubject$ = new BehaviorSubject<any>({});
+  page$ = this.pageSubject$.asObservable();
 
   constructor(protected apollo: Apollo) { }
 
@@ -24,4 +26,7 @@ export class PageService {
       );
   }
 
+  setPage(value: any) {
+    this.pageSubject$.next(value);
+  }
 }

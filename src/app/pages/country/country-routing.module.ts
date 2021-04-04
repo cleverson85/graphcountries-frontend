@@ -6,7 +6,7 @@ import { CountryResolverGuard } from 'src/app/guards/country.resolver.guard';
 
 const routes: Routes = [
   { path: 'country-edit/:id', component: CountryComponent, resolve: { country: CountryResolverGuard } },
-  { path: 'country-edit', component: CountryComponent, resolve: { country: CountryResolverGuard } }
+  { path: 'country-edit', component: CountryComponent }
 ];
 
 @NgModule({

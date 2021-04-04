@@ -1,4 +1,4 @@
-import { Country } from 'src/app/models/Country';
+import { Country } from 'src/app/models/country';
 import { Component, Input, OnInit } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 
@@ -15,6 +15,6 @@ export class CardCountryComponent implements OnInit {
    ngOnInit() { }
 
    Edit() {
-    this.router.navigate(['country/country-edit/' + this.country._id])
+    this.router.navigate(['country/country-edit/' + this.country._id]);
    }
 }

@@ -1,15 +1,17 @@
 import { Router } from '@angular/router';
-import { Usuario } from 'src/app/models/usuario';
 import { Injectable, EventEmitter } from '@angular/core';
 import { HttpClient, HttpErrorResponse, HttpHeaders } from '@angular/common/http';
 
 import { ToasterService } from './common/toaster.service';
 import { JwtHelperService } from '@auth0/angular-jwt';
-import { SocialAuthService } from "angularx-social-login";
+import { SocialAuthService } from 'angularx-social-login';
+import { GoogleLoginProvider } from 'angularx-social-login';
 
-import { GoogleLoginProvider } from "angularx-social-login";
-
+import { Token } from './../shared/token.enum';
+import { ApiRoute } from './../shared/apiRoutes.enum';
+import { Usuario } from 'src/app/models/usuario';
 import { ExternalAuth } from '../models/externalauth';
+
 import { Environment } from '../environment.service';
 
 @Injectable({
@@ -21,10 +23,7 @@ export class AuthService {
 
   mostrarMenuEmitter = new EventEmitter<boolean>();
   tokenHelper = new JwtHelperService();
-
-  get token () {
-    return localStorage.getItem('token')
-  }
+  tempUser = false;
 
   constructor(private httpClient: HttpClient,
               private router: Router,
@@ -33,47 +32,57 @@ export class AuthService {
 
   httpOptions = {
     headers: new HttpHeaders({
-      'Access-Control-Allow-Origin': '*',
-      'Content-Type': 'application/json'
+      'Content-Type': 'application/json; charset=utf-8',
     })
   };
 
-  login(usuario: Usuario) {
-    this.httpClient.post(`${this.API}session`, JSON.stringify(usuario), this.httpOptions)
-      .subscribe((result: any) => {
-        this.configureSession(result);
-      },
-      (e: HttpErrorResponse) => {
-        const { error } = e;
-        this.toaster.showToastError(error.message);
-      });
+  login(user: Usuario) {
+    this.configureToken(ApiRoute.TEPORALY_AUTH, user);
   }
 
   loginExternal(externalAuth: ExternalAuth) {
-    this.httpClient.post(`${this.API}api/auth/ExternalLogin`, externalAuth)
-      .subscribe((result: any) => {
-        this.configureSession(result);
-      },
-      (e: HttpErrorResponse) => {
-        const { error } = e;
-        this.toaster.showToastError(error.message);
-      });
+    this.configureToken(ApiRoute.EXTERNAL_AUTH, externalAuth);
+  }
+
+  configureToken(endPoint: ApiRoute, credencials: any) {
+    this.httpClient.post(`${this.API}${endPoint}`, credencials)
+    .subscribe((result: any) => {
+      this.configureSession(result);
+    },
+    (e: HttpErrorResponse) => {
+      const { error } = e;
+      this.toaster.showToastError(error.message);
+    });
   }
 
   logOut() {
-    const { email } = this.tokenHelper.decodeToken(localStorage.getItem('token'));
-    localStorage.removeItem('token');
+    if (!this.tempUser) {
+      this.signOutExternal();
+    }
+
+    this.removeToken();
     this.mostrarMenuEmitter.emit(false);
     this.router.navigate(['']);
   }
 
+  removeToken() {
+    localStorage.removeItem(Token.Key);
+  }
+
+  setToken(key: string, value: string) {
+    localStorage.setItem(key, value);
+  }
+
+  getToken(key: string): string {
+    return localStorage.getItem(key)
+  }
 
   configureSession(result: any) {
-    debugger;
-    const { token, autenticado } = result;
+    const { token, isAuthenticaded, tempUser } = result;
+    this.tempUser = tempUser;
 
-    if (autenticado) {
-      localStorage.setItem('token', token);
+    if (isAuthenticaded) {
+      this.setToken(Token.Key, token);
       this.router.navigate(['/home']);
     } else {
       this.mostrarMenuEmitter.emit(false);
@@ -81,14 +90,14 @@ export class AuthService {
     }
   }
 
-  usuarioAutenticado() {
-    const isExpired = this.tokenHelper.isTokenExpired(localStorage.getItem('token'));
+  tokenIsExpired(): boolean {
+    const isExpired = this.tokenHelper.isTokenExpired(this.getToken(Token.Key));
     this.mostrarMenuEmitter.emit(!isExpired);
 
     return isExpired;
   }
 
-  signInWithGoogle() {
+  signInWithGoogle(): any {
     return this.externalAuthService.signIn(GoogleLoginProvider.PROVIDER_ID);
   }
 

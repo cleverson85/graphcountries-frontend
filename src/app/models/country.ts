@@ -15,24 +15,24 @@ export interface Country {
 }
 
 export interface DistanceToOtherCountries {
-  countryName: string
-  distanceInKm: number
-};
+  countryName: string;
+  distanceInKm: number;
+}
 
 export interface OfficialLanguages {
-  nativeName: string
-};
+  nativeName: string;
+}
 
 export interface TopLevelDomains {
-  name: string
-};
+  name: string;
+}
 
 export interface Borders {
-  name: string
+  name: string;
   location: {
     x: number;
     y: number;
     longitude: number;
     latitude: number;
-  }
-};
+  };
+}

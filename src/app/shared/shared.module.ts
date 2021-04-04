@@ -20,16 +20,18 @@ const modules = [
   MatIconModule,
   MatListModule,
   MatMenuModule,
-  AvatarModule
+  AvatarModule,
 ];
 
 @NgModule({
-	imports: [
-    ...modules
-	],
-	exports: [
-		...modules
+  imports: [...modules],
+  exports: [...modules],
+  providers: [
+    {
+      provide: MAT_FORM_FIELD_DEFAULT_OPTIONS,
+      useValue: { appearance: 'fill' },
+    },
   ],
-  providers: [{ provide: MAT_FORM_FIELD_DEFAULT_OPTIONS, useValue: { appearance: 'fill' } }],
 })
+
 export class SharedModule { }

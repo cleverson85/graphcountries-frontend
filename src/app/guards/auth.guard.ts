@@ -16,7 +16,7 @@ export class AuthGuard implements CanActivate, CanLoad {
   canActivate(
     route: ActivatedRouteSnapshot,
     state: RouterStateSnapshot
-  ) : Observable<boolean> | boolean {
+  ): Observable<boolean> | boolean {
     return this.verificarAcesso();
   }
 
@@ -25,9 +25,10 @@ export class AuthGuard implements CanActivate, CanLoad {
   }
 
   private verificarAcesso(): boolean {
-    // if (this.authService.usuarioAutenticado()){
-    //    this.router.navigate(['']);
-    // }
+    if (this.authService.tokenIsExpired()){
+       this.router.navigate(['']);
+    }
+
     return true;
   }
 }

@@ -1,33 +1,31 @@
 import { Country } from './../../models/country';
-import { Component, EventEmitter, OnInit, ViewChild } from '@angular/core';
+import { Component, OnInit, OnDestroy } from '@angular/core';
 import { Subscription } from 'rxjs';
 
 import { CountryService } from 'src/app/providers/country.service';
-import { ModalService } from 'src/app/providers/modal.service';
-import { PageService } from 'src/app/providers/page.service';
 
-import { PaginationComponent } from 'src/app/components/pagination/pagination.component';
 import { SearchValue } from 'src/app/shared/searchValue.enum';
+import { ToasterService } from 'src/app/providers/common/toaster.service';
+import { AuthService } from 'src/app/providers/auth.service';
 
 @Component({
   selector: 'app-home',
   templateUrl: './home.component.html',
   styleUrls: ['./home.component.scss'],
 })
-export class HomeComponent implements OnInit {
+export class HomeComponent implements OnInit, OnDestroy {
 
   subscription = new Subscription();
   placeholder = 'Country';
   searchValue = SearchValue.Country;
   countries: Country[] = [];
 
-  constructor(
-    private CountryService: CountryService,
-    private modalService: ModalService,
-    private pageService: PageService
-  ) { }
+  constructor(private countryService: CountryService,
+              private toasterService: ToasterService,
+              private authService: AuthService) { }
 
   ngOnInit() {
+    this.userAutheticated();
     this.getCoutries();
   }
 
@@ -37,9 +35,20 @@ export class HomeComponent implements OnInit {
 
   getCoutries(page?: number) {
     this.subscription.add(
-      this.CountryService.getCountries(page).subscribe((result: any) => {
-        const { Country } = result;
-        this.countries = Country;
+      this.countryService.getCountries(page).subscribe((result: any) => {
+        this.countries = result.Country;
+
+        // this.countryService.getCountriesFromCustoAPI().subscribe((res: any) => {
+        //   debugger;
+        //   const coutriesMap = res.map((e: any) => {
+        //     e._id = e.id;
+        //     return e;
+        //   })
+
+        //   debugger;
+
+        //   this.countries.push(...coutriesMap);
+        // })
       })
     );
   }
@@ -50,10 +59,14 @@ export class HomeComponent implements OnInit {
 
   find(valueToSearch: string) {
     this.subscription.add(
-      this.CountryService.getCountryByValue(this.searchValue, valueToSearch)
+      this.countryService.getCountryByValue(this.searchValue, valueToSearch)
         .subscribe((result: any) => {
           const { Country } = result;
           this.countries = Country;
+
+          if (this.countries.length <= 0) {
+            this.toasterService.showToastWarning('Nothing information was found.');
+          }
       })
     );
   }
@@ -61,5 +74,9 @@ export class HomeComponent implements OnInit {
   changePlaceholder(type: string, searchValue: string) {
     this.placeholder = type;
     this.searchValue = searchValue as SearchValue;
+  }
+
+  userAutheticated(): boolean {
+    return this.authService.tempUser;
   }
 }

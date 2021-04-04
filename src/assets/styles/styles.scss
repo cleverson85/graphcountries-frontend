@@ -17,10 +17,6 @@ html, body, #app-root {
   overflow: auto;
 }
 
-h1 {
-  margin-top: 15px;
-}
-
 *:focus {
   outline: 0;
 }
@@ -32,6 +28,10 @@ body {
 
 body, input, button {
   font: 14px, Roboto-Regular, sans-serif;
+}
+
+h1 {
+  margin-top: 15px;
 }
 
 a {
@@ -79,10 +79,6 @@ label {
   font: 16px Roboto-Regular, sans-serif;
   opacity: 1;
   color: #444444;
-}
-
-input {
-  text-transform: uppercase;
 }
 
 /* Table */
@@ -143,7 +139,7 @@ tbody :hover {
   left: -15px;
   bottom: 10px;
   width: 100%;
-  text-align: center;
+  text-align: right;
 }
 
 .icon :hover {

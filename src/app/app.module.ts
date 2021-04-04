@@ -11,7 +11,6 @@ import { MenuModule } from './components/menu/menu.module';
 import { ToastrModule } from 'ngx-toastr';
 import { ConfirmModalModule } from './components/confirm-modal/confirm-modal.module';
 import { GraphQLModule } from './graphql.module';
-import { NgxSpinnerModule, NgxSpinnerService } from 'ngx-spinner';
 
 import { AppComponent } from './app.component';
 import {
@@ -23,6 +22,7 @@ import { GoogleLoginProvider } from 'angularx-social-login';
 import { HttpRequestInterceptor } from './shared/httprequest.interceptor';
 import { AppConfig } from './app-config.model';
 import { Environment } from './environment.service';
+import { ErrorInterceptor } from './shared/error.interceptor';
 
 export function initializeApp(environmentConfig: Environment) {
   return (): Promise<AppConfig> => environmentConfig.load();
@@ -53,12 +53,10 @@ export function signExternal() {
     NoopAnimationsModule,
     MenuModule,
     ConfirmModalModule,
-    NgxSpinnerModule,
     GraphQLModule,
     ToastrModule.forRoot(),
   ],
   providers: [
-    NgxSpinnerService,
     Environment,
     {
       provide: APP_INITIALIZER,
@@ -70,6 +68,11 @@ export function signExternal() {
       provide: HTTP_INTERCEPTORS,
       useClass: HttpRequestInterceptor,
       multi: true,
+    },
+    {
+      provide: HTTP_INTERCEPTORS,
+      useClass: ErrorInterceptor,
+      multi: true
     },
     SocialAuthService,
     {

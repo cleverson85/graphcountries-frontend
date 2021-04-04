@@ -5,7 +5,7 @@ export class CountryQuery {
   static queryCountryByName() {
     return gql`
     query Country($name: String) {
-      Country (filter: { name_contains: $name }) {
+      Country (name: $name, orderBy: name_asc) {
         _id
         flag {
           svgFile
@@ -57,7 +57,7 @@ export class CountryQuery {
   static queryCountryByCapitalName() {
     return gql`
 		query Country($capitalName: String) {
-      Country (filter: { capital_contains: $capitalName }) {
+      Country (capital: $capitalName, orderBy: name_asc) {
         _id
         flag {
           svgFile
@@ -72,8 +72,8 @@ export class CountryQuery {
 
   static queryCountryPage() {
     return gql`
-		query Country($page: Int) {
-      Country (first: 9, offset: $page) {
+		query Country($itens: Int, $offset: Int) {
+      Country (first: $itens, offset: $offset, orderBy: name_asc) {
         _id
         flag {
           svgFile

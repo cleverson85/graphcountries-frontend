@@ -17,9 +17,11 @@ export class LoginComponent implements OnInit {
   constructor(
     private formBuilder: FormBuilder,
     private authService: AuthService
-  ) {}
+  ) { }
 
   ngOnInit() {
+    this.authService.removeToken();
+
     this.formGroup = this.formBuilder.group({
       email: [
         '',
@@ -30,13 +32,11 @@ export class LoginComponent implements OnInit {
           ),
         ],
       ],
-      senha: ['', Validators.required],
     });
   }
 
   login() {
     this.submitted = true;
-
     if (this.formGroup.valid) {
       this.authService.login(this.formGroup.value);
     }

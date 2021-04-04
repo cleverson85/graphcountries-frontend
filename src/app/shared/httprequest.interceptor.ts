@@ -7,22 +7,20 @@ import {
 } from '@angular/common/http';
 import { Observable } from 'rxjs';
 
+import { Token } from './token.enum';
+
 @Injectable({
   providedIn: 'root',
 })
 export class HttpRequestInterceptor implements HttpInterceptor {
   constructor() { }
 
-  intercept(
-    req: HttpRequest<any>,
-    next: HttpHandler
-  ): Observable<HttpEvent<any>> {
-    const token = localStorage.getItem('token');
+  intercept(req: HttpRequest<any>, next: HttpHandler): Observable<HttpEvent<any>> {
+
+    const token = localStorage.getItem(Token.Key);
 
     if (token) {
-      const cloned = req.clone({
-        headers: req.headers.set('Authorization', 'Bearer ' + token),
-      });
+      const cloned = req.clone({ headers: req.headers.set('Authorization', 'Bearer ' + token) });
       return next.handle(cloned);
     } else {
       return next.handle(req);

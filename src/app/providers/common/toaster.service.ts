@@ -17,7 +17,7 @@ export class ToasterService {
 
   constructor(private toastr: ToastrService) {
       this.options = this.toastr.toastrConfig;
-      this.options.timeOut = 3000;
+      this.options.timeOut = 5000;
       this.options.progressBar = true;
   }
 

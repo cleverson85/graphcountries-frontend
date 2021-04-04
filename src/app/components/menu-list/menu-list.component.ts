@@ -5,8 +5,6 @@ import { ModalService } from 'src/app/providers/modal.service';
 import { ToasterService } from 'src/app/providers/common/toaster.service';
 import { CountryService } from 'src/app/providers/country.service';
 
-import { RoutesApi } from 'src/app/shared/routesAPI.enum';
-
 @Component({
   selector: 'app-menu-list',
   templateUrl: './menu-list.component.html',
@@ -20,7 +18,7 @@ export class MenuListComponent implements OnInit {
 
   constructor(private router: Router,
               private modalService: ModalService,
-              private CountryService: CountryService,
+              private countryService: CountryService,
               private toaster: ToasterService) { }
 
   ngOnInit() { }

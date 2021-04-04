@@ -1,13 +1,16 @@
-import { ActivatedRoute } from '@angular/router';
 import { Component, OnInit, OnDestroy } from '@angular/core';
+import { ActivatedRoute } from '@angular/router';
 import { FormGroup, FormBuilder, Validators } from '@angular/forms';
 import { Location } from '@angular/common';
 import { Subscription } from 'rxjs';
 
+import { ApiRoute } from './../../shared/apiRoutes.enum';
 import { CountryService } from '../../providers/country.service';
 import { ToasterService } from 'src/app/providers/common/toaster.service';
+import { AuthService } from 'src/app/providers/auth.service';
 
-import { Country } from 'src/app/models/Country';
+import { Country } from 'src/app/models/country';
+import { HttpErrorResponse } from '@angular/common/http';
 
 @Component({
   selector: 'app-country',
@@ -27,24 +30,28 @@ export class CountryComponent implements OnInit, OnDestroy {
               private formBuilder: FormBuilder,
               private location: Location,
               private activatedRoute: ActivatedRoute,
-              private toaster: ToasterService) { }
+              private toaster: ToasterService,
+              private authService: AuthService) { }
 
   ngOnInit() {
     this.country = this.activatedRoute.snapshot.data['country'];
 
     this.formGroup = this.formBuilder.group({
-      id: [ this.country?._id ],
+      id: [ this.country?._id || 0],
       name: [ this.country?.name, Validators.required ],
       capital: [ this.country?.capital, Validators.required ],
       area: [ this.country?.area.toLocaleString(), Validators.required ],
-      population: [ this.country?.population.toLocaleString(), Validators.required ],
-      populationDensity: [ this.country?.populationDensity.toLocaleString(), Validators.required ],
+      population: [ (this.country?.population / 100).toFixed(2), Validators.required ],
+      populationDensity: [  (this.country?.populationDensity / 100).toFixed(2), Validators.required ],
       languages: [ this.country?.officialLanguages?.map(e => e.nativeName).join(', '), Validators.required ],
       domain: [ this.country?.topLevelDomains?.map(e => e.name ).join(', '), Validators.required ],
     });
 
-    this.configureTitle(this.country);
-    this.configureOtherCountries(this.country);
+    if (this.country) {
+      this.configureTitle(this.country);
+      this.configureOtherCountries(this.country);
+      this.userAutheticated();
+    }
   }
 
   ngOnDestroy() {
@@ -59,23 +66,20 @@ export class CountryComponent implements OnInit, OnDestroy {
     this.submitted = true;
 
     if (this.formGroup.valid) {
-      // this.subscription.add(this.CountryService.saveCountry(this.formGroup.value)
-      //   .subscribe((result: any) => {
-      //     const { message, id } = result;
-
-      //     this.toaster.showToastSuccess(message);
-      //     this.location.back();
-      //   },
-      //   (e: HttpErrorResponse) => {
-      //     const { error } = e;
-      //     this.toaster.showToastError(error.message);
-      //   })
-      // );
+      this.subscription.add(this.countryService.save<Country>(this.formGroup.value, ApiRoute.POST)
+        .subscribe((result: any) => {
+          this.toaster.showToastSuccess('Operação efetuada com sucesso.');
+          this.location.back();
+        },
+        (e: any) => {
+          this.toaster.showToastError(e);
+        })
+      );
     }
   }
 
   configureOtherCountries(country: Country) {
-    this.country.distanceToOtherCountries
+    country.distanceToOtherCountries
       .forEach((e: any) => {
         e.distanceInKm = e.distanceInKm.toLocaleString();
       });
@@ -84,6 +88,10 @@ export class CountryComponent implements OnInit, OnDestroy {
   }
 
   configureTitle(country: Country) {
-    this.titulo = country._id > 0 ? "Edit Country " : "Register Country"
+    this.titulo = country._id > 0 ? 'Edit Country ' : 'Register Country';
+  }
+
+  userAutheticated(): boolean {
+    return this.authService.tempUser;
   }
 }

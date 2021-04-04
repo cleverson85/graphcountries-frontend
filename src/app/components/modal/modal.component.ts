@@ -20,6 +20,6 @@ export class ModalComponent implements OnInit {
   }
 
   getSrc(imagem: any) {
-    //return imagem.url;
+    // return imagem.url;
   }
 }
