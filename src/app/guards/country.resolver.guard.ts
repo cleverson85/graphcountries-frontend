@@ -20,7 +20,12 @@ export class CountryResolverGuard implements Resolve<any> {
   resolve(
     route: ActivatedRouteSnapshot, state: RouterStateSnapshot
   ): Observable<any> {
-    if (route.params && route.params['id']) {
+    if (route.params && route.params['id'] && route.params['changed']) {
+
+      if (route.params['changed'] == 'true') {
+        return this.countryService.getCountriesByIdFromCustomApi(route.params['id']);
+      }
+
       return this.countryService.getCountriesById(route.params['id']);
     }
    }

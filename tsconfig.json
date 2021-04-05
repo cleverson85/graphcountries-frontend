@@ -11,19 +11,13 @@
     "moduleResolution": "node",
     "importHelpers": true,
     "target": "es2015",
-    "lib": [
-      "es2018",
-      "dom"
-    ]
+    "lib": ["es2018", "dom"]
   },
   "angularCompilerOptions": {
     "fullTemplateTypeCheck": true,
-    "strictInjectionParameters": true
+    "strictInjectionParameters": true,
+    "strictTemplates": true
   },
   "include": ["src"],
-  "exclude": [
-    "node_modules",
-    "dist",
-    ".docker"
-  ]
+  "exclude": ["node_modules", "dist", ".docker"]
 }

@@ -21,7 +21,7 @@ export class PageService {
       .valueChanges.pipe(
         map((result: any) => {
           const { Country } = result.data;
-          return Country;
+          return Country.length;
         })
       );
   }

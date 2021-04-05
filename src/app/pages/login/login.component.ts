@@ -23,8 +23,7 @@ export class LoginComponent implements OnInit {
     this.authService.removeToken();
 
     this.formGroup = this.formBuilder.group({
-      email: [
-        '',
+      email: ['',
         [
           Validators.required,
           Validators.pattern(
@@ -32,6 +31,7 @@ export class LoginComponent implements OnInit {
           ),
         ],
       ],
+      senha: ['', Validators.required]
     });
   }
 

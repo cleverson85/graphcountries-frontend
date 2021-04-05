@@ -5,26 +5,24 @@
     </div>
     <div class="d-flex justify-content-center">
       <div class="input-group w-75">
-        <input type="text" class="form-control" placeholder="{{ placeholder }}" aria-describedby="button-addon4" #valueToSearch (blur)="find(valueToSearch.value)">
+        <input type="text" class="form-control" placeholder="{{ placeholder }}" aria-describedby="button-addon4" #valueToSearch>
         <div class="input-group-append" id="button-addon4">
-          <button class="btn btn-secondary dropdown-toggle" type="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">Find by {{ placeholder }} name</button>
+          <button class="btn btn-secondary dropdown-toggle" type="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">Procurar por {{ placeholder }}</button>
           <div class="dropdown-menu">
             <a class="dropdown-item" (click)="changePlaceholder('country', 'A')" style="cursor: pointer;">Country</a>
             <a class="dropdown-item" (click)="changePlaceholder('capital', 'B')" style="cursor: pointer;">Capital</a>
           </div>
-          <a class="btn btn-success" role="button" (click)="find(valueToSearch.value)">Find</a>
-          <a class="btn btn-primary" role="button" routerLink="/country/country-edit" *ngIf="!this.userAutheticated()">Register</a>
+          <a class="btn btn-success" role="button" (click)="find(valueToSearch.value)">Procurar</a>
+          <a class="btn btn-primary" role="button" routerLink="/country/country-edit" *ngIf="!this.userAutheticated()">Cadastrar</a>
         </div>
       </div>
     </div>
   </div>
-  <div *ngIf="countries.length > 0">
+  <div *ngIf="countries?.length > 0">
     <div class="countries">
       <div class="container w-container">
         <div class="countries-cards">
-          <ng-template ngFor let-country [ngForOf]="countries" let-i="index">
-            <app-card-country [country]="country"></app-card-country>
-          </ng-template>
+          <app-card-country [country]="country" *ngFor="let country of countries"></app-card-country>
         </div>
       </div>
     </div>

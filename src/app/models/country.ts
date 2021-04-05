@@ -1,5 +1,5 @@
 export interface Country {
-  _id: number;
+  id: number;
   name: string;
   flag: {
     svgFile: string;
@@ -12,6 +12,7 @@ export interface Country {
   topLevelDomains: TopLevelDomains[];
   borders: Borders[];
   distanceToOtherCountries: DistanceToOtherCountries[];
+  changed: boolean;
 }
 
 export interface DistanceToOtherCountries {
@@ -30,8 +31,6 @@ export interface TopLevelDomains {
 export interface Borders {
   name: string;
   location: {
-    x: number;
-    y: number;
     longitude: number;
     latitude: number;
   };

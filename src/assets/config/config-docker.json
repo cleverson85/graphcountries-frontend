@@ -9,5 +9,6 @@
   },
   "authentication": {
     "googleClientId": "${CLIENT_ID}"
-  }
+  },
+  "itensPerPage": "${QTD_ITEM}"
 }

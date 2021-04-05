@@ -1,5 +1,6 @@
-import { Component, OnInit, Input, Output, EventEmitter } from '@angular/core';
+import { Component, OnInit, Output, EventEmitter } from '@angular/core';
 import { Subscription } from 'rxjs';
+import { Environment } from 'src/app/environment.service';
 
 import { PageService } from 'src/app/providers/page.service';
 
@@ -14,23 +15,27 @@ export class PaginationComponent implements OnInit {
   subscription = new Subscription();
   numberPages: any;
   config: any;
+  totalPages: number;
 
   constructor(private pageService: PageService) {}
 
   ngOnInit() {
-    this.getPageCount();
+    this.configurePages();
 
     this.config = {
-      itemsPerPage: 9,
+      itemsPerPage: Environment.settings.itensPerPage,
       currentPage: 1,
       totalItems: this.numberPages,
     };
   }
 
-  getPageCount() {
+  configurePages() {
     this.subscription.add(
       this.pageService.page$.subscribe((result: any) => {
         this.numberPages = result;
+        this.totalPages = Math.round(
+          this.numberPages?.length / Environment.settings.itensPerPage
+        );
       })
     );
   }

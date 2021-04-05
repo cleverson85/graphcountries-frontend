@@ -3,10 +3,10 @@
     <h1>{{ titulo }}</h1>
     <div>
       <button type="button" class="btn btn-danger" routerLink="/home">
-        Cancel
+        Cancelar
       </button>
-      <button type="sumit" class="btn btn-primary" (click)="save()" *ngIf="!this.userAutheticated()">
-        Save
+      <button type="sumit" class="btn btn-primary" (click)="save()" *ngIf="!valid">
+        Salvar
       </button>
     </div>
   </div>
@@ -14,21 +14,24 @@
     <div class="card" style="width: 50%;">
       <div class="card-body">
         <div class="form-row">
-          <div [class]="country?._id > 0 ? 'form-group col-md-10' : 'form-group col-md-12'">
+          <div [class]="country?.id > 0 ? 'form-group col-md-10' : 'form-group col-md-12'">
             <label for="name">Name</label>
             <input
               id="name"
               class="form-control"
               type="text"
-              [readonly]="country?._id > 0"
+              [readonly]="country?.id > 0"
               formControlName="name"
-              [ngClass]="{ 'is-invalid': submitted && hasError('name') }">
+              [ngClass]="{ 'is-invalid': submitted && hasError('name') }"
+              (blur)="validateGraphCoutriesApi()">
               <div class="invalid-feedback" *ngIf="hasError('name') && hasError('name')['required']">
                 Please enter the Country name.
               </div>
           </div>
-          <div class="form-group col-md-2 d-flex justify-content-center align-items-center" *ngIf="country?._id > 0">
-            <img [src]="country?.flag.svgFile" alt="Flag" style="width: 150px;">
+          <div class="form-group col-md-2 d-flex justify-content-center align-items-center" *ngIf="country?.id > 0">
+            <img [src]="country?.flag.svgFile || country?.flag"
+              alt="Flag"
+              style="width: 150px;">
           </div>
         </div>
 
@@ -41,7 +44,7 @@
               type="text"
               placeholder="Capital"
               formControlName="capital"
-              [readonly]="this.userAutheticated()"
+              [readonly]="valid"
               [ngClass]="{ 'is-invalid': submitted && hasError('capital') }">
               <div class="invalid-feedback" *ngIf="hasError('capital') && hasError('capital')['required']">
                 Please enter the Capital name.
@@ -52,10 +55,10 @@
             <input
               id="area"
               class="form-control"
-              type="number"
+              type="text"
               placeholder="Area"
               formControlName="area"
-              [readonly]="this.userAutheticated()"
+              [readonly]="valid"
               [ngClass]="{ 'is-invalid': submitted && hasError('area') }">
               <div class="invalid-feedback" *ngIf="hasError('area') && hasError('area')['required']">
                 Please enter the Area.
@@ -69,10 +72,10 @@
             <input
               id="population"
               class="form-control"
-              type="number"
+              type="text"
               placeholder="Population"
               formControlName="population"
-              [readonly]="this.userAutheticated()"
+              [readonly]="valid"
               [ngClass]="{ 'is-invalid': submitted && hasError('population') }">
               <div class="invalid-feedback" *ngIf="hasError('population') && hasError('population')['required']">
                 Please enter the Population.
@@ -83,10 +86,10 @@
             <input
               id="populationDensity"
               class="form-control"
-              type="number"
+              type="text"
               placeholder="Population Density (per km²)"
               formControlName="populationDensity"
-              [readonly]="this.userAutheticated()"
+              [readonly]="valid"
               [ngClass]="{ 'is-invalid': submitted && hasError('populationDensity') }">
               <div class="invalid-feedback" *ngIf="hasError('populationDensity') && hasError('populationDensity')['required']">
                 Please enter the Population Density.
@@ -102,8 +105,8 @@
               class="form-control"
               type="text"
               placeholder="Oficio Languages"
-              formControlName="languages"
-              [readonly]="this.userAutheticated()"
+              formControlName="officialLanguages"
+              [readonly]="valid"
               [ngClass]="{ 'is-invalid': submitted && hasError('languages') }">
               <div class="invalid-feedback" *ngIf="hasError('languages') && hasError('languages')['required']">
                 Please enter the Oficio Languages.
@@ -116,8 +119,8 @@
               class="form-control"
               type="text"
               placeholder="Top Level Domains"
-              formControlName="domain"
-              [readonly]="this.userAutheticated()"
+              formControlName="topLevelDomains"
+              [readonly]="valid"
               [ngClass]="{ 'is-invalid': submitted && hasError('domain') }">
               <div class="invalid-feedback" *ngIf="hasError('domain') && hasError('domain')['required']">
                 Please enter the Top Level Domains.
@@ -125,7 +128,7 @@
           </div>
         </div>
 
-        <label *ngIf="country?._id > 0">Distance To Other Countries</label>
+        <label *ngIf="country?.id > 0">Distance To Other Countries</label>
         <ng-template ngFor let-otherCountry [ngForOf]="ontherCountries" let-i="index">
           <div class="form-row">
             <div class="form-group col-md-6">

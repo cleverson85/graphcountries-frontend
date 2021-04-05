@@ -10,4 +10,5 @@ export interface AppConfig {
   authentication: {
     googleClientId: string;
   };
+  itensPerPage: number;
 }

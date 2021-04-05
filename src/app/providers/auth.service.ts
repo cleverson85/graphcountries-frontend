@@ -18,10 +18,10 @@ import { Environment } from '../environment.service';
   providedIn: 'root'
 })
 export class AuthService {
+  mostrarMenuEmitter = new EventEmitter<boolean>();
 
   private readonly API = Environment.settings.apiCustom.url;
 
-  mostrarMenuEmitter = new EventEmitter<boolean>();
   tokenHelper = new JwtHelperService();
   tempUser = false;
 
@@ -37,7 +37,7 @@ export class AuthService {
   };
 
   login(user: Usuario) {
-    this.configureToken(ApiRoute.TEPORALY_AUTH, user);
+    this.configureToken(ApiRoute.LOGIN, user);
   }
 
   loginExternal(externalAuth: ExternalAuth) {
@@ -45,13 +45,12 @@ export class AuthService {
   }
 
   configureToken(endPoint: ApiRoute, credencials: any) {
-    this.httpClient.post(`${this.API}${endPoint}`, credencials)
-    .subscribe((result: any) => {
+    this.httpClient.post(`${this.API}${endPoint}`, credencials).subscribe((result: any) => {
       this.configureSession(result);
     },
     (e: HttpErrorResponse) => {
       const { error } = e;
-      this.toaster.showToastError(error.message);
+      this.toaster.showToastError("Email ou senha incorretos");
     });
   }
 
@@ -85,14 +84,17 @@ export class AuthService {
       this.setToken(Token.Key, token);
       this.router.navigate(['/home']);
     } else {
-      this.mostrarMenuEmitter.emit(false);
-      this.router.navigate(['']);
+      this.logOut();
     }
   }
 
   tokenIsExpired(): boolean {
     const isExpired = this.tokenHelper.isTokenExpired(this.getToken(Token.Key));
     this.mostrarMenuEmitter.emit(!isExpired);
+
+    if (isExpired) {
+      this.logOut();
+    }
 
     return isExpired;
   }

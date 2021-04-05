@@ -1,6 +1,7 @@
 <div class="card-country">
     <div class="card-country-imagem">
-        <img [src]="country?.flag?.svgFile" loading="lazy" sizes="(max-width: 479px) 100vw, 358px" alt="" class="image-3">
+        <img [src]="country?.flag?.svgFile || country?.flag || 'assets/images/no_flag.png'"
+          loading="lazy" sizes="(max-width: 479px) 100vw, 358px" alt="" class="image-3">
     </div>
     <div class="card-country-titulo">
         <h4 class="heading-5">{{ country?.name }}</h4>
@@ -13,6 +14,9 @@
     </div>
     <div class="card-country-texto">
         <p class="paragraph-5">Population: {{ country?.population?.toLocaleString() }}</p>
+    </div>
+    <div class="card-country-texto" *ngIf="country.changed && country.id < 500" style="display: flex; justify-content: center;">
+        <p class="paragraph-5" style="font-weight: bold; color: red;">Alterado</p>
     </div>
     <div class="card-country-ver">
         <a class="link-block-13 w-inline-block" (click)="Edit()">

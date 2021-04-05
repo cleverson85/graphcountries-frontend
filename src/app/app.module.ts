@@ -22,7 +22,6 @@ import { GoogleLoginProvider } from 'angularx-social-login';
 import { HttpRequestInterceptor } from './shared/httprequest.interceptor';
 import { AppConfig } from './app-config.model';
 import { Environment } from './environment.service';
-import { ErrorInterceptor } from './shared/error.interceptor';
 
 export function initializeApp(environmentConfig: Environment) {
   return (): Promise<AppConfig> => environmentConfig.load();
@@ -54,7 +53,7 @@ export function signExternal() {
     MenuModule,
     ConfirmModalModule,
     GraphQLModule,
-    ToastrModule.forRoot(),
+    ToastrModule.forRoot()
   ],
   providers: [
     Environment,
@@ -68,11 +67,6 @@ export function signExternal() {
       provide: HTTP_INTERCEPTORS,
       useClass: HttpRequestInterceptor,
       multi: true,
-    },
-    {
-      provide: HTTP_INTERCEPTORS,
-      useClass: ErrorInterceptor,
-      multi: true
     },
     SocialAuthService,
     {

@@ -25,8 +25,18 @@ export class AppComponent implements OnInit {
       this.mostrarMenu = mostrar;
     });
 
-    this.pageService.getPageCount().subscribe((result: Country[]) => {
-      this.pageService.setPage(result);
+    this.pageService.getPageCount().subscribe((result: number) => {
+      this.countryService.getCountCountriesFromCustoAPI().subscribe((count: number) => {
+        const totalPages = result + count;
+        let pages = [];
+
+        let index = 0;
+        while (index < totalPages) {
+          pages.push(index);
+          index++;
+        }
+        this.pageService.setPage(pages);
+      });
     });
   }
 }

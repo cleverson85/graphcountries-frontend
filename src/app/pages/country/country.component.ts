@@ -10,7 +10,6 @@ import { ToasterService } from 'src/app/providers/common/toaster.service';
 import { AuthService } from 'src/app/providers/auth.service';
 
 import { Country } from 'src/app/models/country';
-import { HttpErrorResponse } from '@angular/common/http';
 
 @Component({
   selector: 'app-country',
@@ -25,6 +24,10 @@ export class CountryComponent implements OnInit, OnDestroy {
   ontherCountries: any;
   titulo: string;
   submitted = false;
+  valid: boolean;
+  lat: number = -23.8779431;
+  lng: number = -49.8046873;
+  zoom: number = 15;
 
   constructor(private countryService: CountryService,
               private formBuilder: FormBuilder,
@@ -37,14 +40,20 @@ export class CountryComponent implements OnInit, OnDestroy {
     this.country = this.activatedRoute.snapshot.data['country'];
 
     this.formGroup = this.formBuilder.group({
-      id: [ this.country?._id || 0],
+      id: [ this.country?.id || 0],
       name: [ this.country?.name, Validators.required ],
       capital: [ this.country?.capital, Validators.required ],
-      area: [ this.country?.area.toLocaleString(), Validators.required ],
-      population: [ (this.country?.population / 100).toFixed(2), Validators.required ],
-      populationDensity: [  (this.country?.populationDensity / 100).toFixed(2), Validators.required ],
-      languages: [ this.country?.officialLanguages?.map(e => e.nativeName).join(', '), Validators.required ],
-      domain: [ this.country?.topLevelDomains?.map(e => e.name ).join(', '), Validators.required ],
+      area: [ (this.country?.area / 100).toFixed(2), Validators.pattern('^[a-zA-Z ]*') ],
+      population: [ (this.country?.population / 100).toFixed(2), Validators.pattern('^[a-zA-Z ]*') ],
+      populationDensity: [ (this.country?.populationDensity / 100).toFixed(2), Validators.pattern('^[a-zA-Z ]*') ],
+
+      officialLanguages: [ this.configureLanguages(this.country), Validators.required ],
+      topLevelDomains: [ this.configureDomains(this.country), Validators.required ],
+
+      flag: [ this.country?.flag ],
+      distanceToOtherCountries: [ this.country?.distanceToOtherCountries ],
+      borders: [ this.country?.borders ],
+      changed: true
     });
 
     if (this.country) {
@@ -59,23 +68,46 @@ export class CountryComponent implements OnInit, OnDestroy {
   }
 
   hasError(field: string) {
-    return this.formGroup.get(field).errors;
+    return this.formGroup.get(field)?.errors;
   }
 
   save() {
     this.submitted = true;
 
     if (this.formGroup.valid) {
-      this.subscription.add(this.countryService.save<Country>(this.formGroup.value, ApiRoute.POST)
-        .subscribe((result: any) => {
-          this.toaster.showToastSuccess('Operação efetuada com sucesso.');
-          this.location.back();
-        },
-        (e: any) => {
-          this.toaster.showToastError(e);
-        })
-      );
+      if (!this.country?.changed) {
+        this.subscription.add(this.countryService.save<Country>(this.formGroup.value, ApiRoute.POST)
+          .subscribe((result: any) => {
+            this.toaster.showToastSuccess('Operação efetuada com sucesso.');
+            this.location.back();
+          },
+          (e: any) => {
+            this.toaster.showToastError(e);
+          })
+        );
+      } else {
+        this.subscription.add(this.countryService.update<Country>(this.formGroup.value, ApiRoute.PUT)
+          .subscribe((result: any) => {
+            this.toaster.showToastSuccess('Operação efetuada com sucesso.');
+            this.location.back();
+          },
+          (e: any) => {
+            this.toaster.showToastError(e);
+          })
+        );
+      }
     }
+  }
+
+  validateGraphCoutriesApi() {
+    this.subscription.add(this.countryService.getCountryByName(this.formGroup.get('name').value)
+      .subscribe((result) => {
+        if (result.Country.length > 0) {
+          this.toaster.showToastSuccess('Nome do país já se encontra registrado.');
+          this.valid = true;
+        }
+      })
+    )
   }
 
   configureOtherCountries(country: Country) {
@@ -88,10 +120,26 @@ export class CountryComponent implements OnInit, OnDestroy {
   }
 
   configureTitle(country: Country) {
-    this.titulo = country._id > 0 ? 'Edit Country ' : 'Register Country';
+    this.titulo = country.id > 0 ? 'Edit Country ' : 'Register Country';
   }
 
-  userAutheticated(): boolean {
-    return this.authService.tempUser;
+  configureLanguages(country: Country) {
+    try {
+      return country?.officialLanguages.map((e) => (e.nativeName)).join(', ');
+    } catch (error) {
+      return country?.officialLanguages;
+    }
+  }
+
+  configureDomains(country: Country) {
+    try {
+      return country?.topLevelDomains.map((e) => (e.name)).join(', ');
+    } catch (error) {
+      return country?.topLevelDomains;
+    }
+  }
+
+  userAutheticated() {
+    this.valid = this.authService.tempUser;
   }
 }

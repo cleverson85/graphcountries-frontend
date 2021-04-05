@@ -26,7 +26,7 @@ export class AuthGuard implements CanActivate, CanLoad {
 
   private verificarAcesso(): boolean {
     if (this.authService.tokenIsExpired()){
-       this.router.navigate(['']);
+      this.router.navigate(['']);
     }
 
     return true;

@@ -1,10 +1,10 @@
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
-import { retry } from 'rxjs/operators';
 import { Observable } from 'rxjs';
 
 import { Environment } from 'src/app/environment.service';
 import { Apollo } from 'apollo-angular';
+import { ToasterService } from './toaster.service';
 
 @Injectable({
   providedIn: 'root'
@@ -13,14 +13,15 @@ class ApiBase {
   private readonly API = Environment.settings.apiCustom.url;
 
   constructor(private httpClient: HttpClient,
-              protected apollo: Apollo) { }
+              protected apollo: Apollo,
+              protected toaster: ToasterService) { }
 
   get<T>(route: string): Observable<T> {
     return this.httpClient.get<T>(this.API + route);
   }
 
-  getById<T>(route: string): Observable<T> {
-    return this.httpClient.get<T>(this.API + route);
+  getById<T>(route: string, id: number): Observable<T> {
+    return this.httpClient.get<T>(this.API + route + id);
   }
 
   update<T>(Entity: T, route: string): Observable<T> {
@@ -32,7 +33,7 @@ class ApiBase {
   }
 
   delete<T>(id: number, route: string): Observable<T> {
-    return this.httpClient.delete<T>(this.API + route + '/' + id);
+    return this.httpClient.delete<T>(this.API + route + id);
   }
 }
 

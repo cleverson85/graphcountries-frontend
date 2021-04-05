@@ -155,3 +155,7 @@ tbody :hover {
 .mat-list-item-content {
   padding: 0 !important;
 }
+
+#toast-container {
+  z-index: 9999999;
+}

@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
-import { map, shareReplay, tap } from 'rxjs/operators';
+import { catchError, map, shareReplay, tap } from 'rxjs/operators';
 import { Country } from '../models/country';
 import { ApiRoute } from '../shared/apiRoutes.enum';
 import { SearchValue } from '../shared/searchValue.enum';
@@ -13,17 +13,27 @@ import ApiBase from './common/apiBase.service';
 })
 export class CountryService extends ApiBase {
 
-  getCountryByValue(searchValue: SearchValue, valueToSearch: string): Observable<any> {
-    let countryList: any;
+  countriesDelete: any = [];
 
+  getCountryByValue(searchValue: SearchValue, valueToSearch: string): Observable<any> {
     if (valueToSearch != '') {
       if (searchValue == SearchValue.Country) {
-        countryList = this.getCountryByName(valueToSearch);
+        return this.getCountryByName(valueToSearch);
       } else if (searchValue == SearchValue.Capital) {
-        countryList = this.getCountryByCapitalName(valueToSearch);
+        return this.getCountryByCapitalName(valueToSearch);
       }
+    }
 
-      return countryList;
+    return this.getCountries(0);
+  }
+
+  getCountryByValueCustomApi(searchValue: SearchValue, valueToSearch: string): Observable<any> {
+    if (valueToSearch != '') {
+      if (searchValue == SearchValue.Country) {
+        return this.getCountryByNameCustomApi(valueToSearch);
+      } else if (searchValue == SearchValue.Capital) {
+        return this.getCountryByCapitalNameCustomApi(valueToSearch);
+      }
     }
 
     return this.getCountries(0);
@@ -55,6 +65,24 @@ export class CountryService extends ApiBase {
       );
   }
 
+  getCountryByCapitalNameCustomApi(capitalName: string): Observable<any> {
+    return this.get<number>(ApiRoute.GETBY_CAPITAL_NAME + capitalName)
+      .pipe(
+        map((result: any) => {
+          return result;
+        })
+      );
+  }
+
+  getCountryByNameCustomApi(countryName: string): Observable<any> {
+    return this.get<number>(ApiRoute.GETBY_COUNTRY_NAME + countryName)
+      .pipe(
+        map((result: any) => {
+          return result;
+        })
+      );
+  }
+
   getCountries(page: number = 0): Observable<Country[]> {
     const itens = 9;
     const offset = 9 * page;
@@ -75,6 +103,10 @@ export class CountryService extends ApiBase {
     return this.get<Country[]>(ApiRoute.GETALL);
   }
 
+  getCountCountriesFromCustoAPI(): Observable<number> {
+    return this.get<number>(ApiRoute.GET_COUNT);
+  }
+
   getCountriesById(id: string): Observable<Country> {
     return this.apollo
       .query({
@@ -84,8 +116,39 @@ export class CountryService extends ApiBase {
       .pipe(
         map((result: any) => {
           const { Country } = result.data;
-          return Country[0] as Country;
+          let data = Country[0];
+          data['id'] = data._id;
+          return data;
         })
       );
+  }
+
+  getCountriesByIdFromCustomApi(id: number): Observable<any> {
+    return this.getById<Country>(ApiRoute.GETBY_ID, id)
+      .pipe(
+        map((result: any) => {
+          return result;
+        })
+      );
+  }
+
+  configureContriesChanged(countries: any, custom: any) {
+    return countries.map((element: Country) => {
+      let changed = custom.find((f: Country, i: number) => {
+        if (f.id == element.id) {
+          let aux = f;
+          this.countriesDelete.push(custom.splice(i, 1));
+          return aux;
+        }
+      })
+
+      element['changed'] = false;
+      if (changed) {
+        element = changed;
+        element['changed'] = true;
+      }
+
+      return element;
+    });
   }
 }

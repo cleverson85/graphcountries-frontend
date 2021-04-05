@@ -22,6 +22,20 @@
             Por favor informe um email válido.
           </div>
         </div>
+        <div class="form-group">
+          <label for="senha">Senha</label>
+          <input
+            type="password"
+            id="senha"
+            name="senha"
+            class="form-control"
+            formControlName="senha"
+            [ngClass]="{ 'is-invalid': submitted && hasError('senha') }"
+          />
+          <div class="invalid-feedback" *ngIf="hasError('senha') && hasError('senha')['required']" >
+            Por favor informe a senha para login.
+          </div>
+        </div>
         <div class="button">
           <button type="sumit" class="btn btn-primary" (click)="login()">Login</button>
           <button class="btn btn-danger" type="button" (click)="externalLogin()">Google</button>
