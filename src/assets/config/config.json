@@ -5,7 +5,7 @@
     "url": "https://countries-274616.ew.r.appspot.com/"
   },
   "apiCustom": {
-    "url": "http://localhost:5050/"
+    "url": "https://localhost:44306/"
   },
   "authentication": {
     "googleClientId": "215750439007-1fg9gcs0m3kg0v4ejtis28m3p0ejl6ts.apps.googleusercontent.com"

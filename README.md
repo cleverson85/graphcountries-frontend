@@ -10,7 +10,9 @@ yarn compose ou docker-compose up --build -d
 
 http://localhost:8080
 
-# 4° Login
+# 4° Acessar
+
+# 5° Login
 
 Usuário: usuario@admin.com.br
 Senha: 123456

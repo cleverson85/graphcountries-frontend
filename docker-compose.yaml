@@ -5,5 +5,7 @@ services:
     build:
       context: .
     container_name: graphcountries-frontend
+    environment:
+      API_URL_CUSTOM: "http://localhost:5050/"
     ports:
       - 8080:80

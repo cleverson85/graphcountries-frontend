@@ -43,12 +43,12 @@ export class CountryComponent implements OnInit, OnDestroy {
       id: [ this.country?.id || 0],
       name: [ this.country?.name, Validators.required ],
       capital: [ this.country?.capital, Validators.required ],
-      area: [ (this.country?.area / 100).toFixed(2), Validators.pattern('^[a-zA-Z ]*') ],
-      population: [ (this.country?.population / 100).toFixed(2), Validators.pattern('^[a-zA-Z ]*') ],
-      populationDensity: [ (this.country?.populationDensity / 100).toFixed(2), Validators.pattern('^[a-zA-Z ]*') ],
+      area: [ (this.country?.area / 100).toFixed(2) ],
+      population: [ (this.country?.population / 100).toFixed(2) ],
+      populationDensity: [ (this.country?.populationDensity / 100).toFixed(2) ],
 
-      officialLanguages: [ this.configureLanguages(this.country), Validators.required ],
-      topLevelDomains: [ this.configureDomains(this.country), Validators.required ],
+      officialLanguages: [ this.configureLanguages(this.country) ],
+      topLevelDomains: [ this.configureDomains(this.country) ],
 
       flag: [ this.country?.flag ],
       distanceToOtherCountries: [ this.country?.distanceToOtherCountries ],
@@ -127,7 +127,7 @@ export class CountryComponent implements OnInit, OnDestroy {
     try {
       return country?.officialLanguages.map((e) => (e.nativeName)).join(', ');
     } catch (error) {
-      return country?.officialLanguages;
+      return country?.officialLanguages || '';
     }
   }
 
@@ -135,7 +135,7 @@ export class CountryComponent implements OnInit, OnDestroy {
     try {
       return country?.topLevelDomains.map((e) => (e.name)).join(', ');
     } catch (error) {
-      return country?.topLevelDomains;
+      return country?.topLevelDomains || '';
     }
   }
 
