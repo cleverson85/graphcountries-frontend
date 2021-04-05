@@ -10,9 +10,4 @@ yarn compose ou docker-compose up --build -d
 
 http://localhost:8080
 
-# 4° Acessar
-
-# 5° Login
-
-Usuário: usuario@admin.com.br
-Senha: 123456
+yarn start => para debug
