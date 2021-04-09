@@ -5,5 +5,12 @@ services:
     build:
       context: .
     container_name: graphcountries-frontend
+    environment:
+      APP_NAME: "Graph Countries"
+      PRODUCTION: "true"
+      API_URL: "https://countries-274616.ew.r.appspot.com/"
+      API_URL_CUSTOM: "http://localhost:5050/"
+      CLIENT_ID: "215750439007-1fg9gcs0m3kg0v4ejtis28m3p0ejl6ts.apps.googleusercontent.com"
+      QTD_ITEM: "9"
     ports:
       - 8080:80
